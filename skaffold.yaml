@@ -31,10 +31,15 @@ metadata:
 requires:
   - configs: [setup]
 build:
+  tagPolicy:
+    envTemplate:
+      template: "deepfactor"
+  local:
+    push: false
   artifacts:
-  - image: gcr.io/bank-of-anthos/accounts-db
+  - image: johnkday/accounts-db-bodf
     context: src/accounts-db
-  - image: gcr.io/bank-of-anthos/ledger-db
+  - image: johnkday/ledger-db-bodf
     context: src/ledger-db
 deploy:
   kubectl:
@@ -51,19 +56,27 @@ metadata:
 requires:
   - configs: [db]
 build:
+  tagPolicy:
+    envTemplate:
+      template: "deepfactor"
+  local:
+    push: false
   artifacts:
-  - image: gcr.io/bank-of-anthos/ledgerwriter
+  - image: johnkday/ledgerwriter-bodf
     jib:
       project: src/ledgerwriter
-  - image: gcr.io/bank-of-anthos/balancereader
+      fromImage: openjdk:11
+  - image: johnkday/balancereader-bodf
     jib:
       project: src/balancereader
-  - image: gcr.io/bank-of-anthos/transactionhistory
+      fromImage: openjdk:11
+  - image: johnkday/transactionhistory-bodf
     jib:
       project: src/transactionhistory
-  - image: gcr.io/bank-of-anthos/contacts
+      fromImage: openjdk:11
+  - image: johnkday/contacts-bodf
     context: src/contacts
-  - image: gcr.io/bank-of-anthos/userservice
+  - image: johnkday/userservice-bodf
     context: src/userservice
 deploy:
   kubectl:
@@ -81,8 +94,13 @@ kind: Config
 metadata:
   name: frontend # module defining frontend service
 build:
+  tagPolicy:
+    envTemplate:
+      template: "deepfactor"
+  local:
+    push: false
   artifacts:
-  - image: gcr.io/bank-of-anthos/frontend
+  - image: johnkday/frontend-bodf
     context: src/frontend
 deploy:
   kubectl:
@@ -96,8 +114,13 @@ kind: Config
 metadata:
   name: loadgenerator # module defining a load generator service
 build:
+  tagPolicy:
+    envTemplate:
+      template: "deepfactor"
+  local:
+    push: false
   artifacts:
-  - image: gcr.io/bank-of-anthos/loadgenerator
+  - image: johnkday/loadgenerator-bodf
     context: src/loadgenerator
 deploy:
   kubectl:
