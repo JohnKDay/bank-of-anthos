@@ -26,6 +26,11 @@ spec:
         app: loadgenerator
       annotations:
         sidecar.istio.io/rewriteAppHTTPProbers: "true"
+        df.k8-app.name: "BoDF"
+        df.k8-app.registration/inject: "enabled"
+        df.k8-app.alert/policy: "Built-in Policy: Max Alert"
+        app-image/repo-details: "johnkday/loadgenerator-bodf:deepfactor"
+        df.k8-app.run.token/runtoken: ""
     spec:
       serviceAccountName: default
       terminationGracePeriodSeconds: 5
@@ -35,6 +40,10 @@ spec:
         image: johnkday/loadgenerator-bodf:deepfactor
         imagePullPolicy: Always
         env:
+        - name: LD_PRELOAD
+          value: /opt/deepfactor/lib/libdf.so
+        - name: DF_MANIFEST
+          value: /opt/deepfactor/manifest/df-manifest.json
         - name: FRONTEND_ADDR
           value: "frontend:80"
         - name: USERS

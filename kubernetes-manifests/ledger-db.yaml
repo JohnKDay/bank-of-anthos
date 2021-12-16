@@ -26,6 +26,12 @@ spec:
     metadata:
       labels:
         app: ledger-db
+      annotations:
+        df.k8-app.name: "BoDF"
+        df.k8-app.registration/inject: "enabled"
+        df.k8-app.alert/policy: "Built-in Policy: Max Alert"
+        app-image/repo-details: "johnkday/ledger-db-bodf:deepfactor"
+        df.k8-app.run.token/runtoken: ""
     spec:
       serviceAccountName: default
       containers:
@@ -52,6 +58,11 @@ spec:
             - name: postgresdb
               mountPath: /var/lib/postgresql/data
               subPath: postgres
+          env:
+            - name: LD_PRELOAD
+              value: /opt/deepfactor/lib/libdf.so
+            - name: DF_MANIFEST
+              value: /opt/deepfactor/manifest/df-manifest.json
       volumes:
         - name: postgresdb
           emptyDir: {}

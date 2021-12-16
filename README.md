@@ -33,6 +33,22 @@ If you’re using this app, please ★Star the repository to show your interest!
 | [accounts-db](./src/accounts-db)                 | PostgreSQL | Database for user accounts and associated data. Option to pre-populate with demo users.                                                      |
 | [loadgenerator](./src/loadgenerator)             | Python/Locust | Continuously sends requests imitating users to the frontend. Periodically creates new accounts and simulates transactions between them.      |
 
+## DeepFactor - super quickstart
+
+1. In the [kubernetes-manifest](./kubernetes-manifest) modify the deployment yaml files add the DFP runtoken and change the alert policy if desired.
+
+2. deploy the JWT token.
+
+```
+kubectl apply -f ./extras/jwt/jwt-secret.yaml
+```
+
+3. deploy the BofA application
+
+```
+kubectl apply -f ./kubernetes-manifests.
+```
+
 ## Quickstart (GKE)
 
 [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://ssh.cloud.google.com/cloudshell/editor?show=ide&cloudshell_git_repo=https://github.com/GoogleCloudPlatform/bank-of-anthos&cloudshell_workspace=.&cloudshell_tutorial=extras/cloudshell/tutorial.md)

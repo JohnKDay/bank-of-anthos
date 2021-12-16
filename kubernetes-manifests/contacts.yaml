@@ -24,6 +24,12 @@ spec:
     metadata:
       labels:
         app: contacts
+      annotations:
+        df.k8-app.name: "BoDF"
+        df.k8-app.registration/inject: "enabled"
+        df.k8-app.alert/policy: "Built-in Policy: Max Alert"
+        app-image/repo-details: "johnkday/contacts-bodf:deepfactor"
+        df.k8-app.run.token/runtoken: ""
     spec:
       serviceAccountName: default
       terminationGracePeriodSeconds: 5
@@ -36,6 +42,10 @@ spec:
           mountPath: "/root/.ssh"
           readOnly: true
         env:
+        - name: LD_PRELOAD
+          value: /opt/deepfactor/lib/libdf.so
+        - name: DF_MANIFEST
+          value: /opt/deepfactor/manifest/df-manifest.json
         - name: VERSION
           value: "v0.5.1"
         - name: PORT
