@@ -49,5 +49,6 @@ ADD *.py /app/
 # Copy logging configuration for gunicorn
 COPY logging.conf /logging.conf
 
+WORKDIR /app
 # Start server using gunicorn
 CMD gunicorn -b :$PORT --threads 2 --log-config /logging.conf --log-level=$LOG_LEVEL "userservice:create_app()"

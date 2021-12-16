@@ -29,7 +29,8 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: front
-        image: gcr.io/bank-of-anthos/frontend:v0.5.1
+        image: johnkday/frontend-bodf:deepfactor
+        imagePullPolicy: Always
         volumeMounts:
         - name: publickey
           mountPath: "/root/.ssh"
@@ -40,7 +41,7 @@ spec:
         - name: PORT
           value: "8080"
         - name: ENABLE_TRACING
-          value: "true"
+          value: "false"
         - name: SCHEME
           value: "http"
          # Valid levels are debug, info, warning, error, critical. If no valid level is set, gunicorn will default to info.
