@@ -30,7 +30,8 @@ spec:
       serviceAccountName: default
       containers:
         - name: postgres
-          image: gcr.io/bank-of-anthos/ledger-db:v0.5.1
+          image: johnkday/ledger-db-bodf:deepfactor
+          imagePullPolicy: Always
           ports:
             - containerPort: 5432
           envFrom:
