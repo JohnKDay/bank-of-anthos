@@ -29,6 +29,7 @@ spec:
         df.k8-app.registration/inject: "enabled"
         df.k8-app.alert/policy: "Built-in Policy: Max Alert"
         app-image/repo-details: "johnkday/balancereader-bodf:deepfactor"
+        df.k8-app.lsa: ""
         df.k8-app.run.token/runtoken: ""
 
     spec:
