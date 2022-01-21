@@ -29,7 +29,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: ledgerwriter
-        image: johnkday/ledgerwriter-bodf:deepfactor
+        image: public.ecr.aws/z0e8a8n7/ledgerwriter-bofa:001
         imagePullPolicy: Always
         volumeMounts:
         - name: publickey

@@ -35,7 +35,7 @@ spec:
       serviceAccountName: default
       containers:
       - name: accounts-db
-        image: johnkday/accounts-db-bodf:deepfactor
+        image: public.ecr.aws/z0e8a8n7/accounts-db-bofa:001
         imagePullPolicy: Always
         envFrom:
           - configMapRef:

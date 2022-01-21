@@ -32,7 +32,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: loadgenerator
-        image: johnkday/loadgenerator-bodf:deepfactor
+        image: public.ecr.aws/z0e8a8n7/loadgenerator-bofa:001
         imagePullPolicy: Always
         env:
         - name: FRONTEND_ADDR

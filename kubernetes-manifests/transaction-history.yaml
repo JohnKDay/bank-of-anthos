@@ -29,7 +29,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: transactionhistory
-        image: johnkday/transactionhistory-bodf:deepfactor
+        image: public.ecr.aws/z0e8a8n7/transactionhistory-bofa:001
         imagePullPolicy: Always
         volumeMounts:
         - name: publickey

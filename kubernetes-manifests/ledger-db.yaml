@@ -30,7 +30,7 @@ spec:
       serviceAccountName: default
       containers:
         - name: postgres
-          image: johnkday/ledger-db-bodf:deepfactor
+          image: public.ecr.aws/z0e8a8n7/ledger-db-bofa:001
           imagePullPolicy: Always
           ports:
             - containerPort: 5432

@@ -29,7 +29,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: userservice
-        image: johnkday/userservice-bodf:deepfactor
+        image: public.ecr.aws/z0e8a8n7/userservice-bofa:001
         imagePullPolicy: Always
         volumeMounts:
         - name: keys
