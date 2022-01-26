@@ -24,6 +24,8 @@ spec:
     metadata:
       labels:
         app: balancereader
+      annotations:
+        df.k8-app.comp.balancereader/lsa: "java"
     spec:
       serviceAccountName: default
       terminationGracePeriodSeconds: 5

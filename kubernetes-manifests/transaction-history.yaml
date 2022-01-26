@@ -24,6 +24,10 @@ spec:
     metadata:
       labels:
         app: transactionhistory
+      annotations:
+        # Use df.k8-app.lsa to enable for all containers in pod
+        #df.k8-app.lsa: "java"
+        df.k8-app.comp.transactionhistory/lsa: "java"
     spec:
       serviceAccountName: default
       terminationGracePeriodSeconds: 5

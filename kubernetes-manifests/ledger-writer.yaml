@@ -24,6 +24,8 @@ spec:
     metadata:
       labels:
         app: ledgerwriter
+      annotations:
+        df.k8-app.comp.ledgerwriter/lsa: "java"
     spec:
       serviceAccountName: default
       terminationGracePeriodSeconds: 5
