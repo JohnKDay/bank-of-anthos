@@ -24,8 +24,6 @@ spec:
     metadata:
       labels:
         app: frontend
-      annotations:
-        df.k8-app.alert/policy: "Built-in Policy: Max Alert"
     spec:
       serviceAccountName: default
       terminationGracePeriodSeconds: 5
