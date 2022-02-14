@@ -52,4 +52,4 @@ ADD locustfile.py /app
 
 WORKDIR /app
 # start loadgenerator
-ENTRYPOINT locust --host="http://${FRONTEND_ADDR}" --loglevel $LOG_LEVEL --no-web -c "${USERS:-10}" 2>&1
+ENTRYPOINT locust --host="http://${FRONTEND_ADDR}" --loglevel $LOG_LEVEL --no-web -c "${USERS:-1}" 2>&1
