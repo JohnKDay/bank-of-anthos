@@ -29,8 +29,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: deepfactor
-        #image: public.ecr.aws/z0e8a8n7/deepfactor-bofa:001
-        image: johnkday/bofa-deepfactor:1
+        image: public.ecr.aws/z0e8a8n7/deepfactor-bofa:001
         imagePullPolicy: Always
         env:
         - name: VERSION
