@@ -39,7 +39,6 @@ from opentelemetry.instrumentation.requests import RequestsInstrumentor
 from opentelemetry.instrumentation.jinja2 import Jinja2Instrumentor
 
 
-
 # pylint: disable-msg=too-many-locals
 def create_app():
     """Flask application factory to create instances
@@ -82,6 +81,20 @@ def create_app():
             return login_page()
         return home()
 
+    @app.route("/deepfactor")
+    def deepfactor():
+        """
+        Make call to DeepFactor simple pod call
+
+        """
+        try:
+            url = '{}'.format(app.config["DEEPFACTOR_URL"])
+            resp = requests.get(url)
+        except requests.exceptions.HTTPError as http_request_err:
+            raise UserWarning(resp.txt) from http_request_err
+
+        return resp.text
+
     @app.route("/home")
     def home():
         """
@@ -90,7 +103,8 @@ def create_app():
         token = request.cookies.get(app.config['TOKEN_NAME'])
         if not verify_token(token):
             # user isn't authenticated
-            app.logger.debug('User isn\'t authenticated. Redirecting to login page.')
+            app.logger.debug(
+                'User isn\'t authenticated. Redirecting to login page.')
             return redirect(url_for('login_page',
                                     _external=True,
                                     _scheme=app.config['SCHEME']))
@@ -105,7 +119,8 @@ def create_app():
         try:
             url = '{}/{}'.format(app.config["BALANCES_URI"], account_id)
             app.logger.debug('Getting account balance.')
-            response = requests.get(url=url, headers=hed, timeout=app.config['BACKEND_TIMEOUT'])
+            response = requests.get(
+                url=url, headers=hed, timeout=app.config['BACKEND_TIMEOUT'])
             if response:
                 balance = response.json()
         except (requests.exceptions.RequestException, ValueError) as err:
@@ -115,7 +130,8 @@ def create_app():
         try:
             url = '{}/{}'.format(app.config["HISTORY_URI"], account_id)
             app.logger.debug('Getting transaction history.')
-            response = requests.get(url=url, headers=hed, timeout=app.config['BACKEND_TIMEOUT'])
+            response = requests.get(
+                url=url, headers=hed, timeout=app.config['BACKEND_TIMEOUT'])
             if response:
                 transaction_list = response.json()
         except (requests.exceptions.RequestException, ValueError) as err:
@@ -125,7 +141,8 @@ def create_app():
         try:
             url = '{}/{}'.format(app.config["CONTACTS_URI"], username)
             app.logger.debug('Getting contacts.')
-            response = requests.get(url=url, headers=hed, timeout=app.config['BACKEND_TIMEOUT'])
+            response = requests.get(
+                url=url, headers=hed, timeout=app.config['BACKEND_TIMEOUT'])
             if response:
                 contacts = response.json()
         except (requests.exceptions.RequestException, ValueError) as err:
@@ -145,7 +162,6 @@ def create_app():
                                contacts=contacts,
                                message=request.args.get('msg', None),
                                bank_name=os.getenv('BANK_NAME', 'Bank of Anthos'))
-
 
     def _populate_contact_labels(account_id, transactions, contacts):
         """
@@ -173,10 +189,10 @@ def create_app():
         # Populate the 'accountLabel' field. If no match found, default to None.
         for trans in transactions:
             if trans['toAccountNum'] == account_id:
-                trans['accountLabel'] = contact_map.get(trans['fromAccountNum'])
+                trans['accountLabel'] = contact_map.get(
+                    trans['fromAccountNum'])
             elif trans['fromAccountNum'] == account_id:
                 trans['accountLabel'] = contact_map.get(trans['toAccountNum'])
-
 
     @app.route('/payment', methods=['POST'])
     def payment():
@@ -191,7 +207,8 @@ def create_app():
         token = request.cookies.get(app.config['TOKEN_NAME'])
         if not verify_token(token):
             # user isn't authenticated
-            app.logger.error('Error submitting payment: user is not authenticated.')
+            app.logger.error(
+                'Error submitting payment: user is not authenticated.')
             return abort(401)
         try:
             account_id = jwt.decode(token, verify=False)['acct']
@@ -247,7 +264,8 @@ def create_app():
         token = request.cookies.get(app.config['TOKEN_NAME'])
         if not verify_token(token):
             # user isn't authenticated
-            app.logger.error('Error submitting deposit: user is not authenticated.')
+            app.logger.error(
+                'Error submitting deposit: user is not authenticated.')
             return abort(401)
         try:
             # get account id from token
@@ -307,10 +325,9 @@ def create_app():
                              headers=hed,
                              timeout=app.config['BACKEND_TIMEOUT'])
         try:
-            resp.raise_for_status() # Raise on HTTP Status code 4XX or 5XX
+            resp.raise_for_status()  # Raise on HTTP Status code 4XX or 5XX
         except requests.exceptions.HTTPError as http_request_err:
             raise UserWarning(resp.text) from http_request_err
-
 
     def _add_contact(label, acct_num, routing_num, is_external_acct=False):
         """
@@ -335,10 +352,9 @@ def create_app():
                              headers=hed,
                              timeout=app.config['BACKEND_TIMEOUT'])
         try:
-            resp.raise_for_status() # Raise on HTTP Status code 4XX or 5XX
+            resp.raise_for_status()  # Raise on HTTP Status code 4XX or 5XX
         except requests.exceptions.HTTPError as http_request_err:
             raise UserWarning(resp.text) from http_request_err
-
 
     @app.route("/login", methods=['GET'])
     def login_page():
@@ -348,7 +364,8 @@ def create_app():
         token = request.cookies.get(app.config['TOKEN_NAME'])
         if verify_token(token):
             # already authenticated
-            app.logger.debug('User already authenticated. Redirecting to /home')
+            app.logger.debug(
+                'User already authenticated. Redirecting to /home')
             return redirect(url_for('home',
                                     _external=True,
                                     _scheme=app.config['SCHEME']))
@@ -360,9 +377,9 @@ def create_app():
                                pod_zone=pod_zone,
                                message=request.args.get('msg', None),
                                default_user=os.getenv('DEFAULT_USERNAME', ''),
-                               default_password=os.getenv('DEFAULT_PASSWORD', ''),
+                               default_password=os.getenv(
+                                   'DEFAULT_PASSWORD', ''),
                                bank_name=os.getenv('BANK_NAME', 'Bank of Anthos'))
-
 
     @app.route('/login', methods=['POST'])
     def login():
@@ -374,13 +391,12 @@ def create_app():
         return _login_helper(request.form['username'],
                              request.form['password'])
 
-
     def _login_helper(username, password):
         try:
             app.logger.debug('Logging in.')
             req = requests.get(url=app.config["LOGIN_URI"],
                                params={'username': username, 'password': password})
-            req.raise_for_status() # Raise on HTTP Status code 4XX or 5XX
+            req.raise_for_status()  # Raise on HTTP Status code 4XX or 5XX
 
             # login success
             token = req.json()['token'].encode('utf-8')
@@ -399,7 +415,6 @@ def create_app():
                                 _external=True,
                                 _scheme=app.config['SCHEME']))
 
-
     @app.route("/signup", methods=['GET'])
     def signup_page():
         """
@@ -408,7 +423,8 @@ def create_app():
         token = request.cookies.get(app.config['TOKEN_NAME'])
         if verify_token(token):
             # already authenticated
-            app.logger.debug('User already authenticated. Redirecting to /home')
+            app.logger.debug(
+                'User already authenticated. Redirecting to /home')
             return redirect(url_for('home',
                                     _external=True,
                                     _scheme=app.config['SCHEME']))
@@ -418,7 +434,6 @@ def create_app():
                                pod_name=pod_name,
                                pod_zone=pod_zone,
                                bank_name=os.getenv('BANK_NAME', 'Bank of Anthos'))
-
 
     @app.route("/signup", methods=['POST'])
     def signup():
@@ -465,7 +480,8 @@ def create_app():
         if token is None:
             return False
         try:
-            jwt.decode(token, key=app.config['PUBLIC_KEY'], algorithms='RS256', verify=True)
+            jwt.decode(
+                token, key=app.config['PUBLIC_KEY'], algorithms='RS256', verify=True)
             app.logger.debug('Token verified.')
             return True
         except jwt.exceptions.InvalidTokenError as err:
@@ -476,13 +492,15 @@ def create_app():
     def format_timestamp_day(timestamp):
         """ Format the input timestamp day in a human readable way """
         # TODO: time zones?
-        date = datetime.datetime.strptime(timestamp, app.config['TIMESTAMP_FORMAT'])
+        date = datetime.datetime.strptime(
+            timestamp, app.config['TIMESTAMP_FORMAT'])
         return date.strftime('%d')
 
     def format_timestamp_month(timestamp):
         """ Format the input timestamp month in a human readable way """
         # TODO: time zones?
-        date = datetime.datetime.strptime(timestamp, app.config['TIMESTAMP_FORMAT'])
+        date = datetime.datetime.strptime(
+            timestamp, app.config['TIMESTAMP_FORMAT'])
         return date.strftime('%b')
 
     def format_currency(int_amount):
@@ -493,7 +511,6 @@ def create_app():
         if int_amount < 0:
             amount_str = '-' + amount_str
         return amount_str
-
 
     # set up global variables
     app.config["TRANSACTIONS_URI"] = 'http://{}/transactions'.format(
@@ -508,9 +525,12 @@ def create_app():
         os.environ.get('USERSERVICE_API_ADDR'))
     app.config["CONTACTS_URI"] = 'http://{}/contacts'.format(
         os.environ.get('CONTACTS_API_ADDR'))
+    app.config["DEEPFACTOR_URL"] = 'http://{}/'.format(
+        os.environ.get('DEEPFACTOR_API_ADDR'))
     app.config['PUBLIC_KEY'] = open(os.environ.get('PUB_KEY_PATH'), 'r').read()
     app.config['LOCAL_ROUTING'] = os.getenv('LOCAL_ROUTING_NUM')
-    app.config['BACKEND_TIMEOUT'] = 4  # timeout in seconds for calls to the backend
+    # timeout in seconds for calls to the backend
+    app.config['BACKEND_TIMEOUT'] = 4
     app.config['TOKEN_NAME'] = 'token'
     app.config['TIMESTAMP_FORMAT'] = '%Y-%m-%dT%H:%M:%S.%f%z'
     app.config['SCHEME'] = os.environ.get('SCHEME', 'http')
